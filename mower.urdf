@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<robot name="autonomous_lawnmower">
+
+  <!-- Base Link (Chassis) -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="1.2 0.8 0.3"/> <!-- Length, Width, Height in meters -->
+      </geometry>
+      <origin xyz="0 0 0.15" rpy="0 0 0"/>
+      <material name="green">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="1.2 0.8 0.3"/>
+      </geometry>
+      <origin xyz="0 0 0.15" rpy="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="50.0"/> <!-- Mass in kg -->
+      <origin xyz="0 0 0.15"/>
+      <inertia ixx="2.0" ixy="0.0" ixz="0.0" iyy="2.5" iyz="0.0" izz="1.5"/>
+    </inertial>
+  </link>
+
+  <!-- Left Drive Wheel -->
+  <link name="left_drive_wheel">
+    <visual>
+      <geometry>
+        <cylinder radius="0.2" length="0.1"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.2" length="0.1"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="2.0"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.026" ixy="0.0" ixz="0.0" iyy="0.026" iyz="0.0" izz="0.05"/>
+    </inertial>
+  </link>
+
+  <!-- Right Drive Wheel -->
+  <link name="right_drive_wheel">
+    <visual>
+      <geometry>
+        <cylinder radius="0.2" length="0.1"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.2" length="0.1"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="2.0"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.026" ixy="0.0" ixz="0.0" iyy="0.026" iyz="0.0" izz="0.05"/>
+    </inertial>
+  </link>
+
+  <!-- Front Left Wheel -->
+  <link name="front_left_wheel">
+    <visual>
+      <geometry>
+        <cylinder radius="0.2" length="0.1"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.2" length="0.1"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="2.0"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.026" ixy="0.0" ixz="0.0" iyy="0.026" iyz="0.0" izz="0.05"/>
+    </inertial>
+  </link>
+
+  <!-- Front Right Wheel -->
+  <link name="front_right_wheel">
+    <visual>
+      <geometry>
+        <cylinder radius="0.2" length="0.1"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.2" length="0.1"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="2.0"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.026" ixy="0.0" ixz="0.0" iyy="0.026" iyz="0.0" izz="0.05"/>
+    </inertial>
+  </link>
+
+  <!-- Front Camera -->
+  <link name="front_camera">
+    <visual>
+      <geometry>
+        <box size="0.05 0.05 0.05"/> <!-- Small cube for camera -->
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <material name="silver">
+        <color rgba="0.7 0.7 0.7 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.05 0.05 0.05"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+    </inertial>
+  </link>
+
+  <!-- Joints -->
+  <!-- Left Drive Wheel Joint -->
+  <joint name="left_drive_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="left_drive_wheel"/>
+    <origin xyz="0.4 0.45 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <!-- Right Drive Wheel Joint -->
+  <joint name="right_drive_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="right_drive_wheel"/>
+    <origin xyz="0.4 -0.45 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <!-- Front Left Wheel Joint -->
+  <joint name="front_left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="front_left_wheel"/>
+    <origin xyz="-0.4 0.45 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <!-- Front Right Wheel Joint -->
+  <joint name="front_right_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="front_right_wheel"/>
+    <origin xyz="-0.4 -0.45 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <!-- Front Camera Joint -->
+  <joint name="front_camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="front_camera"/>
+    <origin xyz="0.6 0 0.25" rpy="0 0 0"/> <!-- Positioned at front, slightly above chassis -->
+  </joint>
+
+</robot>
