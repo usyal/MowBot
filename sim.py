@@ -2,16 +2,17 @@
 import pybullet as p
 import pybullet_data as data
 import random
+import numpy as np
 
 plane_size = 10
-grass_fraction = random.uniform(0.8, 1.0)
+grass_fraction = random.uniform(0.9, 1.0)
 grid_size = random.uniform(0.5, 1.0)
 
 # Establish connection to simulation environment
 p.connect(p.GUI)
 p.setGravity(0, 0, -9.8)
 p.setAdditionalSearchPath(data.getDataPath())
-p.resetDebugVisualizerCamera(cameraDistance = 12, cameraYaw = 50, cameraPitch = -35, cameraTargetPosition = [0 ,0 ,0]) # Camera Position
+p.resetDebugVisualizerCamera(cameraDistance = 10, cameraYaw = 90, cameraPitch = -30, cameraTargetPosition = [0 ,0 ,0]) # Camera Position
 
 # Hides the extra GUI features that are not used 
 p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)  
@@ -28,21 +29,35 @@ p.changeVisualShape(plane_id, -1, rgbaColor=[1, 1, 1, 1])
 
 # Placing grass on a portion of the plane
 num_cells = int(plane_size / grid_size)
+obtsacles = [(random.randint(0, num_cells), random.randint(0, num_cells)) for _ in range(random.randint(1, 3))]  # 1-3 radnom points where obstacles will appear
+
 for i in range(num_cells):
     for j in range(num_cells):
-        if random.random() < grass_fraction:
-            # Squares representing grass
-            pos_x = i * grid_size - plane_size / 2 + grid_size / 2
-            pos_y = j * grid_size - plane_size / 2 + grid_size / 2
-            # Grass Patches
-            visual_shape = p.createVisualShape(
-                p.GEOM_BOX,
-                halfExtents=[grid_size / 2, grid_size / 2, 0.01],
-                rgbaColor=[0.13, 0.55, 0.13, 1] # Grass colour 
-            )
-            p.createMultiBody(baseMass = 0, baseVisualShapeIndex = visual_shape,
-                              basePosition = [pos_x, pos_y, 0])
-            
+        # Squares representing grass
+        pos_x = i * grid_size - plane_size / 2 + grid_size / 2
+        pos_y = j * grid_size - plane_size / 2 + grid_size / 2
+
+        # Obstacle or not
+        distance = min(np.linalg.norm(np.array([i, j]) - np.array(c)) for c in obtsacles) # Computes distance from current position to nearest cluster
+
+        if distance < 1.5:
+            colour = [0.3, 0.2, 0.1, 1] # Obstacle
+        else:
+            colour = [0.13, 0.55, 0.13, 1] # Grass
+
+        # Grass Patches
+        visual_shape = p.createVisualShape(
+            p.GEOM_BOX,
+            halfExtents = [grid_size / 2, grid_size / 2, 0.01],
+            rgbaColor = colour  
+        )
+        p.createMultiBody(baseMass = 0, baseVisualShapeIndex = visual_shape,
+                            basePosition = [pos_x, pos_y, 0])
+        
+
+# Loading the lawn mower
+mowBot_id = p.loadURDF("mower.urdf", basePosition = [5, 4.1, 0])
+
 
 while True:
     p.setTimeStep(1./240.)
