@@ -5,9 +5,9 @@ import random
 import numpy as np
 
 plane_size = 10
-grass_fraction = random.uniform(0.9, 1.0)
-grid_size = random.uniform(1.0, 1.1)
-
+grass_fraction = random.uniform(0.95, 1.0)
+grid_size = random.uniform(1.27, 1.3)
+print(grid_size)
 # Establish connection to simulation environment
 p.connect(p.GUI)
 p.setGravity(0, 0, -9.8)
@@ -73,7 +73,7 @@ for i in range(num_cells):
         
 
 # Loading the lawn mower
-mowBot_id = p.loadURDF("mower.urdf", basePosition = [5.4, 4.1, 0])
+mowBot_id = p.loadURDF("mower.urdf", basePosition = [5, 3.5, 0])
 
 
 while True:
