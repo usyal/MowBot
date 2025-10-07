@@ -6,8 +6,8 @@ import numpy as np
 
 plane_size = 10
 grass_fraction = random.uniform(0.95, 1.0)
-grid_size = random.uniform(1.27, 1.3)
-print(grid_size)
+grid_size = random.uniform(1.45, 1.5)
+
 # Establish connection to simulation environment
 p.connect(p.GUI)
 p.setGravity(0, 0, -9.8)
@@ -32,7 +32,9 @@ num_cells = int(plane_size / grid_size)
 obtsacles = [(random.randint(0, num_cells), random.randint(0, num_cells)) for _ in range(random.randint(1, 3))]  # 1-3 radnom points where obstacles will appear
 
 # Grass texture to place in sim and more textures for obstacles
-grass_texture = p.loadTexture("Textures/grass.jpg")  
+grass_texture1 = p.loadTexture("Textures/grass1.jpg")  
+grass_texture2 = p.loadTexture("Textures/grass2.jpg")  
+
 soil_texture = p.loadTexture("Textures/soil.jpg")
 flowers_texture = p.loadTexture("Textures/flowers.jpg")
 
@@ -49,15 +51,11 @@ for i in range(num_cells):
 
         if distance < 1.5:
             texture = False
-            colour = [1, 1, 1, 1] # Obstacle
-        else:
-            colour = [1, 1, 1, 1] 
 
         # Grass Patches
         visual_shape = p.createVisualShape(
             p.GEOM_BOX,
-            halfExtents = [grid_size / 2, grid_size / 2, 0.01],
-            rgbaColor = colour  
+            halfExtents = [grid_size / 2, grid_size / 2, 0.01]
         )
         # Id for each tile/grass block
         tile_id = p.createMultiBody(
@@ -70,7 +68,7 @@ for i in range(num_cells):
             p.changeVisualShape(
                 tile_id, 
                 -1, # Links of object, -1 is base
-                textureUniqueId = grass_texture
+                textureUniqueId = random.choice([grass_texture1, grass_texture2])
             )
         else:
             p.changeVisualShape(
@@ -81,7 +79,7 @@ for i in range(num_cells):
         
 
 # Loading the lawn mower
-mowBot_id = p.loadURDF("mower.urdf", basePosition = [5, 3.5, 0])
+mowBot_id = p.loadURDF("mower.urdf", basePosition = [4.5, 3.5, 0])
 
 
 while True:
