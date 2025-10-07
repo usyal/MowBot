@@ -31,8 +31,10 @@ p.changeVisualShape(plane_id, -1, rgbaColor=[1, 1, 1, 1])
 num_cells = int(plane_size / grid_size)
 obtsacles = [(random.randint(0, num_cells), random.randint(0, num_cells)) for _ in range(random.randint(1, 3))]  # 1-3 radnom points where obstacles will appear
 
-# Grass texture to place in sim
+# Grass texture to place in sim and more textures for obstacles
 grass_texture = p.loadTexture("Textures/grass.jpg")  
+soil_texture = p.loadTexture("Textures/soil.jpg")
+flowers_texture = p.loadTexture("Textures/flowers.jpg")
 
 for i in range(num_cells):
     for j in range(num_cells):
@@ -47,9 +49,9 @@ for i in range(num_cells):
 
         if distance < 1.5:
             texture = False
-            colour = [0.3, 0.2, 0.1, 1] # Obstacle
+            colour = [1, 1, 1, 1] # Obstacle
         else:
-            colour = [1, 1, 1, 1] # Grass
+            colour = [1, 1, 1, 1] 
 
         # Grass Patches
         visual_shape = p.createVisualShape(
@@ -69,6 +71,12 @@ for i in range(num_cells):
                 tile_id, 
                 -1, # Links of object, -1 is base
                 textureUniqueId = grass_texture
+            )
+        else:
+            p.changeVisualShape(
+                tile_id, 
+                -1, # Links of object, -1 is base
+                textureUniqueId = random.choice([soil_texture, flowers_texture])
             )
         
 
