@@ -6,7 +6,7 @@ import numpy as np
 
 plane_size = 10
 grass_fraction = random.uniform(0.9, 1.0)
-grid_size = random.uniform(0.5, 1.0)
+grid_size = random.uniform(1.2, 1.5)
 
 # Establish connection to simulation environment
 p.connect(p.GUI)
@@ -31,8 +31,13 @@ p.changeVisualShape(plane_id, -1, rgbaColor=[1, 1, 1, 1])
 num_cells = int(plane_size / grid_size)
 obtsacles = [(random.randint(0, num_cells), random.randint(0, num_cells)) for _ in range(random.randint(1, 3))]  # 1-3 radnom points where obstacles will appear
 
+# Grass texture to place in sim
+grass_texture = p.loadTexture("Textures/grass.jpg")  
+
 for i in range(num_cells):
     for j in range(num_cells):
+        # Deafult flag
+        texture = True
         # Squares representing grass
         pos_x = i * grid_size - plane_size / 2 + grid_size / 2
         pos_y = j * grid_size - plane_size / 2 + grid_size / 2
@@ -41,9 +46,10 @@ for i in range(num_cells):
         distance = min(np.linalg.norm(np.array([i, j]) - np.array(c)) for c in obtsacles) # Computes distance from current position to nearest cluster
 
         if distance < 1.5:
+            texture = False
             colour = [0.3, 0.2, 0.1, 1] # Obstacle
         else:
-            colour = [0.13, 0.55, 0.13, 1] # Grass
+            colour = [1, 1, 1, 1] # Grass
 
         # Grass Patches
         visual_shape = p.createVisualShape(
@@ -51,8 +57,19 @@ for i in range(num_cells):
             halfExtents = [grid_size / 2, grid_size / 2, 0.01],
             rgbaColor = colour  
         )
-        p.createMultiBody(baseMass = 0, baseVisualShapeIndex = visual_shape,
-                            basePosition = [pos_x, pos_y, 0])
+        # Id for each tile/grass block
+        tile_id = p.createMultiBody(
+            baseMass = 0,
+            baseVisualShapeIndex = visual_shape,
+            basePosition =[ pos_x, pos_y, 0]
+        )
+        
+        if texture:
+            p.changeVisualShape(
+                tile_id, 
+                -1, # Links of object, -1 is base
+                textureUniqueId = grass_texture
+            )
         
 
 # Loading the lawn mower
