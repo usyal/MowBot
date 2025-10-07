@@ -3,6 +3,7 @@ import pybullet as p
 import pybullet_data as data
 import random
 import numpy as np
+import math
 
 plane_size = 10
 grass_fraction = random.uniform(0.95, 1.0)
@@ -78,8 +79,11 @@ for i in range(num_cells):
             )
         
 
-# Loading the lawn mower
-mowBot_id = p.loadURDF("mower.urdf", basePosition = [4.5, 3.5, 0])
+# Loading the lawn 
+rotation = 180
+radians = math.radians(rotation)
+orientation = p.getQuaternionFromEuler([0, 0, radians])
+mowBot_id = p.loadURDF("mower.urdf", basePosition = [4.5, 3.5, 0], baseOrientation = orientation)
 
 
 while True:
