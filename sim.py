@@ -35,6 +35,8 @@ obtsacles = [(random.randint(0, num_cells), random.randint(0, num_cells)) for _ 
 # Grass texture to place in sim and more textures for obstacles
 grass_texture1 = p.loadTexture("Textures/grass1.jpg")  
 grass_texture2 = p.loadTexture("Textures/grass2.jpg")  
+grass_texture3 = p.loadTexture("Textures/grass3.jpg")  
+
 
 soil_texture = p.loadTexture("Textures/soil.jpg")
 flowers_texture = p.loadTexture("Textures/flowers.jpg")
@@ -69,7 +71,7 @@ for i in range(num_cells):
             p.changeVisualShape(
                 tile_id, 
                 -1, # Links of object, -1 is base
-                textureUniqueId = random.choice([grass_texture1, grass_texture2])
+                textureUniqueId = random.choice([grass_texture1, grass_texture2, grass_texture3])
             )
         else:
             p.changeVisualShape(
