@@ -35,7 +35,8 @@ def feature_extractor(img_location):
 features = []
 labels = []
 
-for label, img in enumerate(["Grass", "Non-Grass"]):
+# 0 - Grass and 1 - Not grass
+for label, img in enumerate(["Grass", "Non-Grass"]): 
     path = os.path.join("Cleaned-Dataset", img)
     for img_file in os.listdir(path):
         img_location = os.path.join(path, img_file)
