@@ -5,7 +5,7 @@ import os
 for filename in os.listdir("Dataset/Grass"):
     img_location = os.path.join("Dataset/Grass", filename)
     img = Image.open(img_location)
-    new_img = img.resize((256, 256), Image.Resampling.LANCZOS)
+    new_img = img.resize((512, 512), Image.Resampling.LANCZOS)
     new_img_location = os.path.join("Cleaned-Dataset/Grass", f"cleaned-{filename}")
     new_img.save(new_img_location)
 
