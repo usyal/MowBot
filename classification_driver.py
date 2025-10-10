@@ -1,7 +1,7 @@
 # File used to call the classification.py file
 # Finds best value for k and collects the metrics for each tested k
 # Using this value of k, a classifier model is saved using save_classifier() function in classification.py file
-import classification as cl
+import classification
 import os
 
 size_of_grass_images = 0
@@ -20,7 +20,7 @@ max_len = min(size_of_grass_images, size_of_non_grass_images)
 i = 2
 
 while (i <= max_len):
-    current_metrics = cl.kfold_implementaton(i)
+    current_metrics = classification.kfold_implementaton(i)
     if (current_metrics[2] < min_validation_error or min_validation_error == -1):
         min_validation_error = current_metrics[2]
         k = i
@@ -30,3 +30,6 @@ while (i <= max_len):
 
 print(all_metrics_per_k)
 print(f"Value of k that minimizes the validation error: {k}")
+
+# Saves the trained classifier
+classification.save_classifier(k)

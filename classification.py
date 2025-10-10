@@ -7,6 +7,7 @@ from skimage import io, color, feature
 # Commonly implemented with K Fold 
 from sklearn.ensemble import RandomForestClassifier as rfc
 import numpy as np
+import joblib as jb
 import os
 
 def feature_extractor(img_location):
@@ -81,10 +82,6 @@ def kfold_implementaton(k):
     features = np.array(features)
     labels = np.array(labels)
 
-    # for i in range(len(features)):
-    #     print(features[i], labels[i])
-    #     print("................................")
-
     skf = kfold(n_splits = k, shuffle = True, random_state = 10) # n_splits is value for k, shuffle and random_state work to randomize the samples in each fold
     k_fold_metrics = []
     k_fold_validation_errors = []
@@ -126,5 +123,32 @@ def kfold_implementaton(k):
     return [accuracy, f1, np.sum(k_fold_validation_errors) / skf.get_n_splits()]
 
 # Once model is trained, model can be saved using joblib or pickle library, but joblib is more efficient for models using larger arrays 
-def save_classifier():
-    pass
+def save_classifier(k):
+    # Same code as kfold_implementation
+    features = []
+    labels = []
+
+    # 0 - Grass and 1 - Not grass
+    for label, img in enumerate(["Grass", "Non-Grass"]): 
+        path = os.path.join("Cleaned-Dataset", img)
+        for img_file in os.listdir(path):
+            img_location = os.path.join(path, img_file)
+            features.append(feature_extractor(img_location))
+            labels.append(label)
+
+    features = np.array(features)
+    labels = np.array(labels)
+
+    skf = kfold(n_splits = k, shuffle = True, random_state = 10)
+
+    for train_img, test_img in skf.split(features, labels):
+        training_features = features[train_img]
+        testing_features = features[test_img]
+
+        training_labels = labels[train_img]
+        testing_labels = labels[test_img]
+
+        trained_classifier = rfc(random_state = 10) 
+        trained_classifier.fit(training_features, training_labels) 
+
+        jb.dump(trained_classifier, "mowbot.joblib")
