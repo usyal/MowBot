@@ -32,24 +32,6 @@ def feature_extractor(img_location):
     # Returning an array of green ratio for each image and textures
     return np.concatenate([[green_amount], bp_histogram])
 
-features = []
-labels = []
-
-# 0 - Grass and 1 - Not grass
-for label, img in enumerate(["Grass", "Non-Grass"]): 
-    path = os.path.join("Cleaned-Dataset", img)
-    for img_file in os.listdir(path):
-        img_location = os.path.join(path, img_file)
-        features.append(feature_extractor(img_location))
-        labels.append(label)
-
-features = np.array(features)
-labels = np.array(labels)
-
-for i in range(len(features)):
-    print(features[i], labels[i])
-    print("................................")
-
 
 # Metrics used for evaluation of K-Fold
 def accuracy_metric(validation_results, labels):
@@ -84,39 +66,65 @@ def get_incorrect_predictions(validation_results, labels):
     return num / len(validation_results)
 
 # K-Fold implementation
-skf = kfold(n_splits = 4, shuffle = True, random_state = 10) # n_splits is value for k, shuffle and random_state work to randomize the samples in each fold
-k_fold_metrics = []
-k_fold_validation_errors = []
+def kfold_implementaton(k):
+    features = []
+    labels = []
 
-for train_img, test_img in skf.split(features, labels): # skf.split() generates train and test indexes for each fold
-    training_features = features[train_img]
-    testing_features = features[test_img]
+    # 0 - Grass and 1 - Not grass
+    for label, img in enumerate(["Grass", "Non-Grass"]): 
+        path = os.path.join("Cleaned-Dataset", img)
+        for img_file in os.listdir(path):
+            img_location = os.path.join(path, img_file)
+            features.append(feature_extractor(img_location))
+            labels.append(label)
 
-    training_labels = labels[train_img]
-    testing_labels = labels[test_img]
+    features = np.array(features)
+    labels = np.array(labels)
 
-    classifier = rfc(random_state = 10) # Random Forest Classifier - generates a new classifer model which is untrained and random_state is a seed to get consistent results
-    # fit() function that builds decision trees to determine what prediction to make for classification. 
-    # The trained model/trees are stored in the classifier object
-    classifier.fit(training_features, training_labels) 
+    # for i in range(len(features)):
+    #     print(features[i], labels[i])
+    #     print("................................")
 
-    # Validating whether the model is able to predict correctly or not on the testing data
-    validation_results = classifier.predict(testing_features)
+    skf = kfold(n_splits = k, shuffle = True, random_state = 10) # n_splits is value for k, shuffle and random_state work to randomize the samples in each fold
+    k_fold_metrics = []
+    k_fold_validation_errors = []
 
-    # Current evaluation array for current fold will store the metrics for accuracy, f1 score, and validation error
-    current_evaluation = []
-    current_evaluation.append(accuracy_metric(validation_results, testing_labels)) # Accuracy Score
-    current_evaluation.append(f1_score(validation_results, testing_labels)) # F1 score
-    k_fold_metrics.append(current_evaluation)
+    for train_img, test_img in skf.split(features, labels): # skf.split() generates train and test indexes for each fold
+        training_features = features[train_img]
+        testing_features = features[test_img]
 
-    k_fold_validation_errors.append(get_incorrect_predictions(validation_results, testing_labels)) # Error for each fold is saved in this list
+        training_labels = labels[train_img]
+        testing_labels = labels[test_img]
 
+        classifier = rfc(random_state = 10) # Random Forest Classifier - generates a new classifer model which is untrained and random_state is a seed to get consistent results
+        # fit() function that builds decision trees to determine what prediction to make for classification. 
+        # The trained model/trees are stored in the classifier object
+        classifier.fit(training_features, training_labels) 
 
-for metric in k_fold_metrics:
-    print(metric)
-    print(".....................")
+        # Validating whether the model is able to predict correctly or not on the testing data
+        validation_results = classifier.predict(testing_features)
 
-# Validation Error for the K-fold
-print(np.sum(k_fold_validation_errors) / skf.get_n_splits())
+        # Current evaluation array for current fold will store the metrics for accuracy, f1 score, and validation error
+        current_evaluation = []
+        current_evaluation.append(accuracy_metric(validation_results, testing_labels)) # Accuracy Score
+        current_evaluation.append(f1_score(validation_results, testing_labels)) # F1 score
+        k_fold_metrics.append(current_evaluation)
+
+        k_fold_validation_errors.append(get_incorrect_predictions(validation_results, testing_labels)) # Error for each fold is saved in this list
+
+    # Computing the accuracy and f1 score on average for k-fold
+    accuracy = 0
+    f1 = 0
+    for arr in k_fold_metrics:
+        accuracy += arr[0]
+        f1 += arr[1]
+    
+    accuracy /= skf.get_n_splits()
+    f1 /= skf.get_n_splits()
+
+    # Returns the metrics for each k-fold
+    return [accuracy, f1, np.sum(k_fold_validation_errors) / skf.get_n_splits()]
 
 # Once model is trained, model can be saved using joblib or pickle library, but joblib is more efficient for models using larger arrays 
+def save_classifier():
+    pass
