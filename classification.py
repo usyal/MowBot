@@ -51,7 +51,7 @@ def f1_score(validation_results, labels):
     FP = np.sum((validation_results == 1) & (labels == 0))
     FN = np.sum((validation_results == 0) & (labels == 1))
 
-    if not (TP + FP > 0) or not (TP + FN > 0):
+    if (TP + FP == 0) or (TP + FN == 0) or TP == 0:
         return 0.0
     
     precision = TP / (TP + FP)
