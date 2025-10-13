@@ -1,3 +1,4 @@
-.DB_Store
+*.DS_Store
 __pycache__/
 *.joblib
+Dataset/.DS_Store
