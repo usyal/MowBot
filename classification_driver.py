@@ -16,10 +16,9 @@ for img in os.listdir("Cleaned-Dataset/Grass"):
 for img in os.listdir("Cleaned-Dataset/Non-Grass"):
     size_of_non_grass_images += 1
 
-max_len = min(size_of_grass_images, size_of_non_grass_images)
 i = 2
 
-while (i <= max_len):
+for i in range(5, 24): # Range of 5-23 typically gives best k
     current_metrics = classification.kfold_implementaton(i)
     if (current_metrics[2] < min_validation_error or min_validation_error == -1):
         min_validation_error = current_metrics[2]
@@ -27,8 +26,8 @@ while (i <= max_len):
     all_metrics_per_k.append(current_metrics)
     i += 1
 
-
-print(all_metrics_per_k)
+for i in range(5, 24): 
+    print(f"k = {i}. {all_metrics_per_k[i - 5]}" )
 print(f"Value of k that minimizes the validation error: {k}")
 
 # Saves the trained classifier
