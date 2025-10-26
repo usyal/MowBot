@@ -13,7 +13,7 @@ import os
 def feature_extractor(img_location):
     img = io.imread(img_location)
     hsv = color.rgb2hsv(img) # Hue, Saturation, vibrance 
-    green = (hsv[:, :, 0] >= 0.2) & (hsv[:, :, 0] <= 0.55) # Typical range in which real world grass colour falls under
+    green = (hsv[:, :, 0] >= 0.13) & (hsv[:, :, 0] <= 0.55) # Typical range in which real world grass colour falls under
     green_amount = np.sum(green) / (img.shape[0] * img.shape[1]) # rows * cols (Normalizing the green colour ratio)
 
     gray = (color.rgb2gray(img) * 255).astype(np.uint8) # Corrects values for images to be exactly 8 bits by scaling so no floats are used
