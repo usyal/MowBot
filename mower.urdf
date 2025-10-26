@@ -5,7 +5,7 @@
   <link name="base_link">
     <visual>
       <geometry>
-        <box size="1.2 0.8 0.3"/> <!-- Length, Width, Height in meters -->
+        <box size="1.2 0.8 0.3"/>
       </geometry>
       <origin xyz="0 0 0.15" rpy="0 0 0"/>
       <material name="green">
@@ -19,13 +19,13 @@
       <origin xyz="0 0 0.15" rpy="0 0 0"/>
     </collision>
     <inertial>
-      <mass value="50.0"/> <!-- Mass in kg -->
+      <mass value="50.0"/>
       <origin xyz="0 0 0.15"/>
       <inertia ixx="2.0" ixy="0.0" ixz="0.0" iyy="2.5" iyz="0.0" izz="1.5"/>
     </inertial>
   </link>
 
-  <!-- Left Drive Wheel -->
+  <!-- Wheels -->
   <link name="left_drive_wheel">
     <visual>
       <geometry>
@@ -49,7 +49,6 @@
     </inertial>
   </link>
 
-  <!-- Right Drive Wheel -->
   <link name="right_drive_wheel">
     <visual>
       <geometry>
@@ -71,7 +70,6 @@
     </inertial>
   </link>
 
-  <!-- Front Left Wheel -->
   <link name="front_left_wheel">
     <visual>
       <geometry>
@@ -93,7 +91,6 @@
     </inertial>
   </link>
 
-  <!-- Front Right Wheel -->
   <link name="front_right_wheel">
     <visual>
       <geometry>
@@ -115,11 +112,11 @@
     </inertial>
   </link>
 
-  <!-- Front Camera -->
-  <link name="front_camera">
+  <!-- Cameras -->
+  <link name="front_bottom_camera">
     <visual>
       <geometry>
-        <box size="0.05 0.05 0.05"/> <!-- Small cube for camera -->
+        <box size="0.05 0.05 0.05"/>
       </geometry>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <material name="silver">
@@ -139,44 +136,67 @@
     </inertial>
   </link>
 
+  <link name="rear_bottom_camera">
+    <visual>
+      <geometry>
+        <box size="0.05 0.05 0.05"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <material name="silver"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.05 0.05 0.05"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+    </inertial>
+  </link>
+
   <!-- Joints -->
-  <!-- Left Drive Wheel Joint -->
   <joint name="left_drive_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="left_drive_wheel"/>
-    <origin xyz="0.4 0.45 0" rpy="0 0 0"/>
+    <origin xyz="0.4 0.45 -0.05" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
   </joint>
 
-  <!-- Right Drive Wheel Joint -->
   <joint name="right_drive_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="right_drive_wheel"/>
-    <origin xyz="0.4 -0.45 0" rpy="0 0 0"/>
+    <origin xyz="0.4 -0.45 -0.05" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
   </joint>
 
-  <!-- Front Left Wheel Joint -->
   <joint name="front_left_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="front_left_wheel"/>
-    <origin xyz="-0.4 0.45 0" rpy="0 0 0"/>
+    <origin xyz="-0.4 0.45 -0.05" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
   </joint>
 
-  <!-- Front Right Wheel Joint -->
   <joint name="front_right_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="front_right_wheel"/>
-    <origin xyz="-0.4 -0.45 0" rpy="0 0 0"/>
+    <origin xyz="-0.4 -0.45 -0.05" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
   </joint>
 
-  <!-- Front Camera Joint -->
-  <joint name="front_camera_joint" type="fixed">
+  <!-- Fixed Joints for Bottom Cameras -->
+  <joint name="front_bottom_camera_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="front_camera"/>
-    <origin xyz="0.6 0 0.25" rpy="0 0 0"/> <!-- Positioned at front, slightly above chassis -->
+    <child link="front_bottom_camera"/>
+    <origin xyz="0.4 -0 -0.01" rpy="0 0 0"/>
+  </joint>
+
+  <joint name="rear_bottom_camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="rear_bottom_camera"/>
+    <origin xyz="-0.4 0 -0.01" rpy="0 0 0"/>
   </joint>
 
 </robot>
